@@ -1,5 +1,10 @@
-import { NextResponse } from "next/server";
+import { db } from "@/firebase.config"
+import { collection, getDocs } from "firebase/firestore"
+import { NextResponse } from "next/server"
 
-export function GET(){
-    return NextResponse.json({mess: 'home page'})
+export async function GET(){
+    const data = collection(db, 'blog')
+    const querySnapShots = await getDocs(data)
+    const blogs = querySnapShots.docs.map((doc) => ({id: doc.id, ...doc.data()}))
+    return NextResponse.json({blogs})
 }
